@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gate Pass</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #3cae69;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .top-bar {
+            width: 100%;
+            height: 50px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .back-icon {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .back-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .top-container {
+            width: calc(90% - 30px);
+            max-width: 470px;
+            height: 25vh;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 70px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 16%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 20px;
+        }
+        
+        .name {
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .info-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            margin: auto 0;
+        }
+        
+        .info-box {
+            width: 100%;
+            border: 1px solid #1976D2;
+            border-radius: 12px;
+            padding: 8px;
+            background-color: white;
+        }
+        
+        .info-box p {
+            margin: 6px 0;
+            font-size: 14px;
+            text-align: left;
+            font-weight: normal;
+            display: flex;
+        }
+        
+        .info-box p span.label {
+            width: 60px;
+            display: inline-block;
+        }
+        
+        .bottom-container {
+            width: calc(90% - 30px);
+            max-width: 470px;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 30px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .scan-time {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .date {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+        
+        .qrcode {
+            margin: 20px 0;
+        }
+        
+        .qrcode img {
+            max-width: 150px;
+            height: auto;
+        }
+        
+        .bottom-time {
+            text-align: center;
+            font-size: 48px;
+            color: black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="back-icon">
+            <svg t="1773973289950" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5832" width="200" height="200">
+                <path d="M714.83 962c-12.535 0-25.07-4.749-34.689-14.247L274.478 547.142c-9.389-9.281-14.681-21.913-14.681-35.124s5.292-25.843 14.681-35.124L680.141 76.258c19.395-19.166 50.662-18.997 69.814 0.434 19.164 19.406 18.973 50.649-0.434 69.814L379.429 512.018l370.092 365.487c19.406 19.165 19.598 50.408 0.434 69.814C740.301 957.106 727.572 962 714.83 962z" fill="#333333" p-id="5833"></path>
+            </svg>
+        </div>
+        <div class="title">我的通行证</div>
+        <div style="width: 24px;"></div>
+    </div>
+    <div class="top-container">
+        <div class="header">
+            <div class="name">秦永涛</div>
+            <img src="HeadImgae.jpg" alt="头像" class="avatar">
+        </div>
+        <div class="info-container">
+            <div class="info-box">
+                <p><span class="label">学工号：</span><span>83797084235</span></p>
+                <p><span class="label">院系：</span><span>交叉信息院</span></p>
+                <p><span class="label">专业：</span><span>大数据与计算机</span></p>
+                <p><span class="label">班级：</span><span>专业大数据与计算机</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-container">
+        <p class="scan-time">扫码时间</p>
+        <p class="date" id="currentDate"></p>
+        <div class="qrcode">
+            <img src="https://img.cdn1.vip/i/69bcb44ab65bc_1773974602.webp" alt="二维码">
+        </div>
+        <div class="bottom-time" id="currentTime"></div>
+    </div>
+    
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            
+            // 更新日期
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const dateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentDate').textContent = dateString;
+            
+            // 更新时间
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        // 初始更新
+        updateDateTime();
+        
+        // 每秒更新一次
+        setInterval(updateDateTime, 1000);
+    </script>
+</body>
+</html>
